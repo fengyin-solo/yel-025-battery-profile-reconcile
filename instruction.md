@@ -16,7 +16,7 @@
 
 台架交接会上，实验员会把每条候选轨迹投到屏幕上复述一次。观察者根据速度回落、切向损耗和旋转变化判断解释是否站得住；若剩某一个数值接近，而另外两项无法说明，整组结果回到重测清单。这样的人工追问和自动残差互为补充，既不给模型放水，也不把漂亮的单一数字当作物理结论。
 
-`pack_id`、`limits`、`profiles`、`readings` 构成顶层，`limits` 内的两个项目控制槽位上限和误差界线。profile 用 `cell_id` 与三元 `fingerprint` 描述，reading 的 `slot` 配合 `charge_ah`, `soc_delta`, `voltage_step_v`, `current_a`, `temperature_c` 保存现场值。输出根键和每条对应行的键集合由下方合同锁定；指纹计算依次是 `charge_ah/soc_delta`、`1000*voltage_step_v/current_a` 经热因子校正、以及电阻除以容量与热因子。单条读数的热因子按 `1 + 0.018 * (temperature_c - 25.0)` 计算，再用于后两个分量。
+`pack_id`、`limits`、`profiles`、`readings` 构成顶层，`pack_id` 使用 2 至 40 个可打印字符，首尾不得有空白，也不接收控制字符。`limits` 内的两个项目控制槽位上限和误差界线。profile 用 `cell_id` 与三元 `fingerprint` 描述，reading 的 `slot` 配合 `charge_ah`, `soc_delta`, `voltage_step_v`, `current_a`, `temperature_c` 保存现场值。输出根键和每条对应行的键集合由下方合同锁定；指纹计算依次是 `charge_ah/soc_delta`、`1000*voltage_step_v/current_a` 经热因子校正、以及电阻除以容量与热因子。单条读数的热因子按 `1 + 0.018 * (temperature_c - 25.0)` 计算，再用于后两个分量。
 
 ## 复核口径
 

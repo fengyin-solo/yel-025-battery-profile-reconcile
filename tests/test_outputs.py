@@ -236,11 +236,27 @@ def test_profile_fingerprint_length_is_refused(tmp_path):
 
 
 def test_duplicate_slot_is_refused(tmp_path):
-    """题面：「两个电池槽位使用同名 slot 时输出 分档拒收: BAD_PROFILE。」"""
+    """题面：「`pack_id` 使用 2 至 40 个可打印字符，首尾不得有空白，也不接收控制字符。」"""
     payload = base_payload()
     payload["readings"][1]["slot"] = payload["readings"][0]["slot"]
     result, _, output = invoke(tmp_path, payload)
     assert result.returncode == 1 and result.stderr == "分档拒收: BAD_PROFILE\n" and not output.exists()
+    minimum = base_payload()
+    minimum["pack_id"] = "AB"
+    minimum_result, _, minimum_output = invoke(tmp_path, minimum, output_name="minimum.json")
+    assert minimum_result.returncode == 0 and read(minimum_output)["pack_id"] == "AB"
+    maximum = base_payload()
+    maximum["pack_id"] = "P" * 40
+    maximum_result, _, maximum_output = invoke(tmp_path, maximum, output_name="maximum.json")
+    assert maximum_result.returncode == 0 and read(maximum_output)["pack_id"] == "P" * 40
+    internal_space = base_payload()
+    internal_space["pack_id"] = "A B"
+    space_result, _, space_output = invoke(tmp_path, internal_space, output_name="space.json")
+    assert space_result.returncode == 0 and read(space_output)["pack_id"] == "A B"
+    tabbed = base_payload()
+    tabbed["pack_id"] = "A\tB"
+    tab_result, _, tab_output = invoke(tmp_path, tabbed, output_name="tab.json")
+    assert tab_result.returncode == 1 and tab_result.stderr == "分档拒收: BAD_PROFILE\n" and not tab_output.exists()
 
 
 def test_ledger_has_exact_shape_and_is_idempotent(tmp_path):
