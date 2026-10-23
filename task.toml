@@ -1,0 +1,27 @@
+schema_version = "1.3"
+
+[task]
+name = "local/battery-profile-reconcile"
+authors = [{ name = "fengyin" }]
+description = "返修库今天收到一批换电柜退役电池包。上位机丢过一次槽位映射，历史容量卡片只剩不同电芯的指纹。值班工程师要把每只电芯对回原槽位，再判断这包是否还能进入梯次利用。"
+keywords = ['battery', 'parameter-recovery', 'global-assignment', 'energy-ledger']
+
+[agent]
+timeout_sec = 3600
+
+[environment]
+build_timeout_sec = 600
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096
+gpus = 0
+allow_internet = true
+
+[verifier]
+timeout_sec = 600
+
+[metadata]
+difficulty = "hard"
+category = "numerical-computing"
+tags = ['battery', 'parameter-recovery', 'global-assignment', 'energy-ledger']
+expert_time_estimate = "50m"
